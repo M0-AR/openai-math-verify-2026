@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="340" viewBox="0 0 760 340" font-family="Menlo,Consolas,monospace">
+<rect width="760" height="340" rx="12" fill="#05070f"/>
+<circle cx="28" cy="24" r="7" fill="#ff5f57"/><circle cx="50" cy="24" r="7" fill="#febc2e"/><circle cx="72" cy="24" r="7" fill="#28c840"/>
+<text x="100" y="29" fill="#5c6b96" font-size="14">benchmarks — docker compose up</text>
+<text x="24" y="62" fill="#5c6b96" font-size="14">$ docker compose up --abort-on-container-exit</text>
+<text x="24" y="90" fill="#c8f5d8" font-size="14">===== 01_prime_counting =====</text>
+<text x="24" y="112" fill="#c8f5d8" font-size="14">pi(1e6) = 78498   |pi-Li| ~= 129.8   ratio = 1.0845</text>
+<text x="24" y="134" fill="#c8f5d8" font-size="14">===== 02_chromatic_plane =====</text>
+<text x="24" y="156" fill="#c8f5d8" font-size="14">Moser spindle 3-colorable? False -&gt; needs &gt;=4 colors: True</text>
+<text x="24" y="178" fill="#c8f5d8" font-size="14">same-color center distance ~= 2.381 &gt; 1  (7 colors suffice)</text>
+<text x="24" y="200" fill="#c8f5d8" font-size="14">===== 03_pi_irrationality =====</text>
+<text x="24" y="222" fill="#c8f5d8" font-size="14">22/7 mu 3.42   355/113 mu 3.24   late -&gt; ~2.0</text>
+<text x="24" y="244" fill="#c8f5d8" font-size="14">Flint-Hills S_5000 ~= 30.314   spike at 355: +24.60</text>
+<text x="24" y="266" fill="#c8f5d8" font-size="14">===== 04_catalog_audit + 05_lean_scope =====</text>
+<text x="24" y="288" fill="#c8f5d8" font-size="14">families_seen: 372   formalized declarations: 185</text>
+<text x="24" y="316" fill="#ffd479" font-size="15">Wrote summary.json and summary.md. Failures: 0 ✔</text>
+</svg>

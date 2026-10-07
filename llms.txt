@@ -1,0 +1,12 @@
+# openai-math-verify-2026
+
+Independent, from-scratch verification log for the October-2026 722-manuscript
+AI mathematics release. Recomputes classical footprints (prime counts,
+plane colorings, pi approximations), audits the public catalog live, and
+routes each headline claim to trust lane L1 (machine-checked + readable),
+L2 (machine-checked + expert review), or L3 (paper only).
+
+Run: docker compose up --abort-on-container-exit
+Results: benchmarks/results/summary.json
+Interactive page: preview.html
+License: Apache-2.0
