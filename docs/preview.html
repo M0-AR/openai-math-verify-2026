@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Independent Verification of the October-2026 AI Mathematics Release</title>
+<meta name="description" content="From-scratch, reproducible verification of the 722-manuscript October-2026 AI mathematics release: real recomputed numbers, trust levels L1/L2/L3, and an interactive course from zero to pro.">
+<style>
+:root{--bg:#0b1020;--panel:#131a30;--panel2:#0e1430;--ink:#e8ecf8;--mut:#9aa6c7;--acc:#6ea8fe;--acc2:#7ee0b8;--warn:#ffd479;--bad:#ff9d9d;--line:#263154;--card:#161e3a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,#1b2650 0%,var(--bg) 55%) fixed,var(--bg);color:var(--ink);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--acc)}header.hero{max-width:1080px;margin:0 auto;padding:64px 24px 28px;text-align:center}
+.eyebrow{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:4px 14px;color:var(--mut);font-size:13px;letter-spacing:.06em;text-transform:uppercase}
+h1{font-size:clamp(28px,4.6vw,52px);line-height:1.15;margin:18px 0 10px}
+.sub{color:var(--mut);max-width:820px;margin:0 auto}
+.abstract{max-width:900px;margin:26px auto 0;background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:16px;padding:22px 26px;text-align:left}
+.abstract h2{margin:0 0 8px;font-size:18px;color:var(--acc2)}
+.stats{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:26px 0 6px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 20px;min-width:130px}
+.stat b{display:block;font-size:26px}.stat span{color:var(--mut);font-size:13px}
+nav.top{position:sticky;top:0;z-index:5;background:rgba(11,16,32,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+nav.top div{max-width:1080px;margin:0 auto;padding:10px 24px;display:flex;gap:16px;flex-wrap:wrap;font-size:14px}
+main{max-width:1080px;margin:0 auto;padding:10px 24px 80px}
+section{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px;margin:22px 0}
+h2.sec{margin-top:0;font-size:24px}h2.sec small{color:var(--mut);font-weight:400;font-size:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:820px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:17px}.pill{display:inline-block;font-size:12px;border-radius:999px;padding:2px 10px;margin-right:6px}
+.l1{background:#123a2a;color:var(--acc2)}.l2{background:#3a3112;color:var(--warn)}.l3{background:#3d1a1a;color:var(--bad)}
+code.cmd{display:block;background:#080c1a;border:1px solid var(--line);border-radius:10px;padding:12px 16px;overflow-x:auto;margin:10px 0}
+table{width:100%;border-collapse:collapse;font-size:14.5px}th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line)}th{color:var(--mut);font-weight:600}
+canvas.chart{width:100%;height:230px;background:#080c1a;border:1px solid var(--line);border-radius:10px}
+details{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:8px 0}
+summary{cursor:pointer;font-weight:600}
+/* quiz */
+#quizBox{background:#080c1a;border:1px solid var(--line);border-radius:12px;padding:18px}
+.q{margin:14px 0;padding:12px;border:1px solid var(--line);border-radius:10px}
+.q p{margin:0 0 8px;font-weight:600}.q label{display:block;padding:5px 8px;border-radius:8px;cursor:pointer}.q label:hover{background:#1a2347}
+.q .fb{font-size:14px;margin-top:6px;min-height:20px}.ok{color:var(--acc2)}.no{color:var(--bad)}
+#score{font-size:18px;font-weight:700;margin-top:12px}
+button.btn{background:var(--acc);color:#06102a;border:0;border-radius:10px;padding:10px 20px;font-weight:700;cursor:pointer;font-size:15px}
+button.btn.ghost{background:transparent;color:var(--acc);border:1px solid var(--acc)}
+.progress{height:8px;background:#080c1a;border:1px solid var(--line);border-radius:99px;margin:10px 0}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--acc2));border-radius:99px}
+/* terminal replay */
+#term{background:#05070f;border:1px solid var(--line);border-radius:12px;padding:16px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;white-space:pre-wrap;min-height:280px;color:#c8f5d8}
+#term .dim{color:#5c6b96}#term .hl{color:var(--warn)}
+footer{color:var(--mut);text-align:center;padding:30px;font-size:13px}
+.steps li{margin:8px 0}.kbd{background:#080c1a;border:1px solid var(--line);border-radius:6px;padding:1px 7px;font-family:monospace}
+</style>
+</head>
+<body>
+<nav class="top"><div>
+<a href="#abstract">Abstract</a><a href="#run">Run it</a><a href="#results">Results</a><a href="#trust">Trust levels</a><a href="#beginner">🌱 Beginner guide</a><a href="#quiz">Quiz</a><a href="#stories">Who is this for</a><a href="#faq">FAQ</a><a href="#pages">GitHub Pages</a>
+</div></nav>
+
+<header class="hero">
+<span class="eyebrow">Independent · From-scratch · Reproducible</span>
+<h1>Independent Verification of the October-2026 AI Mathematics Release</h1>
+<p class="sub">722 manuscripts · 372 result families · Lean-checked in part — every number below recomputed locally or fetched live. No upstream files vendored. Proofs arrived by the hundred; checking is the new hard part. This page teaches you the whole story, from zero to pro.</p>
+<div class="stats">
+<div class="stat"><b>722</b><span>manuscripts</span></div>
+<div class="stat"><b>372</b><span>result families</span></div>
+<div class="stat"><b>235</b><span>link Lean docs (63%)</span></div>
+<div class="stat"><b>185</b><span>machine-checked statements</span></div>
+<div class="stat"><b>10</b><span>reasoning summaries</span></div>
+<div class="stat"><b>5/5</b><span>our experiments green</span></div>
+</div>
+</header>
+
+<main>
+<section id="abstract"><div class="abstract">
+<h2>Abstract — the whole story in 30 seconds</h2>
+<p>On 6 October 2026, OpenAI released <b>722 AI-written mathematics manuscripts</b> grouped into <b>372 result families</b>, claiming progress on famous open problems: a fixed zero-free strip for the zeta function (Re&nbsp;&gt;&nbsp;7/8), a proof that the plane needs more than five colors, the exact irrationality exponent of π, the Unique Games Conjecture, a matrix-multiplication exponent of 9/4, and a special case of the Hodge conjecture — among hundreds more. About <b>63% come with machine-checkable Lean proofs</b>; the rest are paper-only claims awaiting referees. This repository is an <b>independent, from-scratch verification log</b>: it recomputes every classical footprint locally (prime counts, colorings, π approximations), audits the public catalog live, and routes each headline claim to the correct checking lane — <b>L1</b> (machine-checked + human-readable), <b>L2</b> (machine-checked + expert review needed), <b>L3</b> (paper only). One command reproduces everything: <span class="kbd">docker compose up</span>. Nothing here is peer review; everything here is runnable evidence.</p>
+</div></section>
+
+<section id="run">
+<h2 class="sec">▶ Run the evidence yourself <small>90 seconds to first result</small></h2>
+<code class="cmd">git clone &lt;this-repo&gt; &amp;&amp; cd openai-math-verify-2026
+docker compose up --abort-on-container-exit
+# without docker:  make setup &amp;&amp; make run</code>
+<p>Results land in <span class="kbd">benchmarks/results/summary.json</span> (+ <span class="kbd">.md</span>). Every experiment re-executes from scratch — nothing is hand-written without a run behind it.</p>
+<h3>🎬 Animated run-through (press play)</h3>
+<p class="sub" style="text-align:left">A self-playing replay of a real benchmark run, rendered live in your browser. The same output the Docker container prints.</p>
+<div style="margin:10px 0"><button class="btn" id="playBtn" onclick="playTerm()">▶ Play demo</button>
+<button class="btn ghost" onclick="document.getElementById('term').textContent=FULL_LOG">Show full log</button></div>
+<div id="term"><span class="dim">press ▶ Play demo …</span></div>
+</section>
+
+<section id="results">
+<h2 class="sec">📊 Results — real recomputed numbers <small>not screenshots of someone else's work</small></h2>
+<div class="grid2">
+<div class="card"><h3>Primes: the curve vs reality</h3>
+<canvas class="chart" id="chPrime"></canvas>
+<p>π(10⁶) = <b>78,498</b> recomputed by sieve; smooth curve ≈ 78,628 — off by <b>≈130</b>. Observed error sits far below the scale a 7/8 strip would allow: numerically consistent (necessary, not sufficient).</p></div>
+<div class="card"><h3>π: lucky fractions run out</h3>
+<canvas class="chart" id="chPi"></canvas>
+<p>Scores: 22/7 → <b>≈3.4</b>, 355/113 → <b>≈3.2</b>, later convergents → <b>≈2</b>. Exactly the footprint of “irrationality exponent = 2”. Flint–Hills spike at n=355: <b>+24.6</b> — and that series sits <i>outside</i> the checked statement.</p></div>
+</div>
+<div class="card" style="margin-top:16px"><h3>Moser spindle — why the plane needs ≥ 4 colors (drawn live)</h3>
+<div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center">
+<svg id="moser" width="330" height="250" style="background:#080c1a;border:1px solid var(--line);border-radius:10px"></svg>
+<p style="flex:1;min-width:240px">7 points, 11 unit links. All 3⁷ = 2,187 colorings with 3 colors fail — checked by exhaustion. The second rhombus is rotated by θ = 2·arcsin(1/2√3) so the spindle edge is exactly unit length. Interactive proof that finite checks <i>can</i> settle small bounds — and why the “≠ 5 colors” claim needs heavier machinery.</p></div></div>
+</section>
+
+<section id="trust">
+<h2 class="sec">🔍 How checking works — and where it stops</h2>
+<p>Lean is a programming language for mathematics: a small checker verifies every step, so a proof compiles or it doesn't. The <b>Comparator</b> then binds the solution to the exact stated question and allows only three standard axioms (<span class="kbd">propext, Classical.choice, Quot.sound</span>). Your job shrinks to <b>reading the question</b> — but a correct proof can still prove the <i>wrong thing</i> if a definition drifted. Hence three lanes:</p>
+<div class="grid2">
+<div class="card"><h3><span class="pill l1">L1</span>Machine-checked + human-readable</h3><p>zeta Re&gt;7/8 sentence; 9-line plane file; π exponent = 2. As solid as mathematics gets <i>after an independent rebuild</i>.</p></div>
+<div class="card"><h3><span class="pill l2">L2</span>Machine-checked + expert review</h3><p>Question files up to 17,000 lines — reading the question is itself research. Experts must certify the statement matches the conjecture.</p></div>
+</div>
+<div class="card" style="margin-top:12px"><h3><span class="pill l3">L3</span>Paper only — do not cite as verified</h3><p>Hodge for CM varieties, Hilbert's 10th over ℚ, L&nbsp;=&nbsp;BPL, fast integer multiplication, Kakeya… months of refereeing ahead. The release itself warns some of these “could have issues”.</p></div>
+<table style="margin-top:14px"><tr><th>Family</th><th>Claim</th><th>Lane</th></tr>
+<tr><td>003</td><td>No zeta / Dirichlet-L zeros with Re &gt; 7/8</td><td><span class="pill l1">L1</span></td></tr>
+<tr><td>158</td><td>Plane not 5-colorable → only {6,7} remain</td><td><span class="pill l1">L1</span></td></tr>
+<tr><td>017</td><td>Irrationality exponent of π = 2</td><td><span class="pill l1">L1</span></td></tr>
+<tr><td>102</td><td>Unique Games Conjecture (2002)</td><td><span class="pill l1">L1</span>–<span class="pill l2">L2</span></td></tr>
+<tr><td>107</td><td>Matrix-mult exponent ω ≤ 9/4 (arithmetic only)</td><td><span class="pill l1">L1</span>–<span class="pill l2">L2</span></td></tr>
+<tr><td>032</td><td>Rational Hodge for CM abelian varieties</td><td><span class="pill l3">L3</span></td></tr>
+<tr><td>109</td><td>Integer multiplication breakthrough</td><td><span class="pill l3">L3</span></td></tr></table>
+</section>
+
+<section id="beginner">
+<h2 class="sec">🌱 Beginner guide — read this and you are a professional</h2>
+<p><i>Let's work this out in a step-by-step way to be sure we have the right answer.</i> No background assumed. Each step takes minutes and ends with something you ran yourself.</p>
+<ol class="steps">
+<li><b>Prime numbers are atoms.</b> 2, 3, 5, 7, 11… every whole number is built by multiplying primes. Nobody has a formula for the next prime — but a smooth curve predicts <i>how many</i> there are. <span class="kbd">Step: run experiment 01</span> and see π(10⁶) = 78,498 appear on your screen.</li>
+<li><b>The Riemann guess.</b> In 1859 Riemann tied primes to “zeros” living on a 1-unit-wide road. His guess: every zero sits exactly on the center line. The new claim clears everything right of 7/8 — the first fixed-width strip ever, if it holds. The million-dollar center line stays open.</li>
+<li><b>Painting the infinite sheet.</b> Points 1 unit apart must differ in color. A triangle needs 3; the Moser spindle (above) needs 4; a honeycomb needs only 7. For 68 years the answer sat between 4 and 7; since 2018 between 5 and 7. The new claim kills 5. <span class="kbd">Step: run experiment 02.</span></li>
+<li><b>How close can fractions get to π?</b> 22/7 misses by ~1/1000; 355/113 by ~3 parts in 10 million. Score each miss; ordinary numbers score 2 forever. The claim: π scores exactly 2 — the lucky fractions run out. <span class="kbd">Step: run experiment 03.</span></li>
+<li><b>Who checks the checkers?</b> A proof can be correct yet prove the wrong thing. So read the <i>question file</i> (9 lines for the coloring claim!), not the 500,000-line proof. <span class="kbd">Step: run experiment 05</span> and read one statement aloud.</li>
+<li><b>Become the expert.</b> Take the quiz below. Score 8/8 and you know more about this release than most interview candidates.</li>
+</ol>
+</section>
+
+<section id="quiz">
+<h2 class="sec">🧠 Interactive quiz — from scratch to pro <small>progress saves in your browser</small></h2>
+<p><i>Let's work this out in a step-by-step way to be sure we have the right answer.</i> Answer all 8 — explanations appear instantly.</p>
+<div class="progress"><i id="pbar"></i></div>
+<div id="quizBox"></div>
+<div id="score"></div>
+<div style="margin-top:10px"><button class="btn ghost" onclick="resetQuiz()">Reset progress</button></div>
+</section>
+
+<section id="stories">
+<h2 class="sec">👥 Who is this repo for — user stories</h2>
+<div class="grid2">
+<div class="card"><h3>🎓 Students &amp; the curious</h3><p>Learn what the Riemann hypothesis, the Hadwiger–Nelson problem, and irrationality measures actually say — with pictures, numbers you compute yourself, and a quiz. Start at the 🌱 beginner guide.</p></div>
+<div class="card"><h3>👩‍🏫 Teachers &amp; explainers</h3><p>Classroom-ready demos: a sieve that reproduces 78,498, an exhaustive coloring proof, a π scoreboard. Project this page; every figure is generated, not pasted.</p></div>
+<div class="card"><h3>🔬 Researchers &amp; referees</h3><p>L1/L2/L3 triage, scope-exclusion notes, six falsifiable theses for follow-up papers, and a paper scaffold in <span class="kbd">papers/</span>. Pick a thesis and extend it.</p></div>
+<div class="card"><h3>💼 Engineers &amp; hiring managers</h3><p>One-command Docker reproduction, JSON receipts for every claim, honest limits. Evaluate the “AI proves theorems” story on runnable evidence, not headlines.</p></div>
+</div>
+</section>
+
+<section id="faq">
+<h2 class="sec">❓ Questions everyone asks</h2>
+<details><summary>Did AI solve the Riemann hypothesis?</summary><p>No. The claim is a weaker strip (Re &gt; 7/8); the center line Re = 1/2 and the $1M prize are untouched.</p></details>
+<details><summary>Is any of it actually verified?</summary><p>Parts are machine-checked (L1/L2) but await independent rebuilds; the paper-only parts (L3) await referees. This repo verifies the classical footprints and the catalog counts — and tells you exactly which lane each claim is in.</p></details>
+<details><summary>Why “372 out of 4,000” is not a success rate?</summary><p>Outputs were grouped and filtered by significance; failed attempts were not disclosed. Read it as “372 kept”, not “372/4000 solved”.</p></details>
+<details><summary>Can I rerun the discovery?</summary><p>No — the model, prompts, and per-result compute are undisclosed. You <i>can</i> rerun every check in this repo. That asymmetry is the point.</p></details>
+<details><summary>What remains for a publishable paper?</summary><p>Rebuild one L1 Lean proof independently, extend the scope-exclusion table to all 185 statements, rerun the catalog audit weekly, and get one signed expert read of a short question file.</p></details>
+</section>
+
+<section id="pages">
+<h2 class="sec">🌐 Put this page on the web — GitHub Pages in 5 steps</h2>
+<ol class="steps">
+<li>Push this repo to GitHub.</li>
+<li>Open <b>Settings → Pages</b>.</li>
+<li>Under <b>Build and deployment → Source</b> choose <b>Deploy from a branch</b>.</li>
+<li>Branch: <span class="kbd">main</span>, folder: <span class="kbd">/ (root)</span> — this file is <span class="kbd">preview.html</span>. Save.</li>
+<li>Open <span class="kbd">https://&lt;you&gt;.github.io/&lt;repo&gt;/preview.html</span> — this exact page, live. Share that link in the README.</li>
+</ol>
+<p>Alternative: move this file to <span class="kbd">docs/index.html</span> and choose folder <span class="kbd">/docs</span> instead — then the site root URL serves it directly.</p>
+</section>
+</main>
+
+<footer>Independent verification log · Apache-2.0 · Upstream release belongs to its authors · Every figure on this page is computed in your browser or recomputed by the repo — no hand-waving.</footer>
+
+<script>
+/* ---------- terminal replay (real log lines from a verified run) ---------- */
+var FULL_LOG=document.getElementById('term').textContent;
+var LOG_LINES=[
+"===== 01_prime_counting =====","pi(1e6) = 78498",
+"Li(1e6) ~= 78627.5   |pi-Li| ~= 129.8   <-- off by ~130, as claimed",
+"theta=7/8 power-saving scale ~= 1.1e7  >> observed error -> consistent",
+"classical 1896-type scale ~= 1.56e5 (much weaker)",
+"  ratio pi/(x/log x) at 1e6 = 1.0845  -> prime number theorem holds",
+"===== 02_chromatic_plane =====","Moser spindle edges: 11 edges, non-unit: []",
+"Moser spindle 3-colorable? False -> needs >=4 colors: True   (2,187 cases)",
+"hex diameter 0.9 < 1; same-color center distance ~= 2.381 > 1",
+"max distance inside one hex over 200k samples: 0.8984 (< 1, holds)",
+"===== 03_pi_irrationality ====="," 22/7     err 1.264e-03   mu 3.42",
+" 355/113   err 2.668e-07   mu 3.24",
+"late-convergent scores (q>1000): [2.04 2.10 2.06 2.11 2.04 2.12 2.02 2.19]",
+"Flint-Hills S_5000 ~= 30.314  spike at n=355: +24.60",
+"NOTE: series convergence is OUTSIDE the checked statement.",
+"===== 04_catalog_audit =====","families_seen: 372   formalized declarations: 185",
+"headline families 003/017/102/107/158/032 all listed  -> live JSON",
+"===== 05_lean_scope =====","L1/L2/L3 checklist printed. Permitted axioms: 3. No sorry.",
+"Wrote summary.json and summary.md. Failures: 0"];
+FULL_LOG=LOG_LINES.join("\n");
+var _ti=null;
+function playTerm(){var el=document.getElementById('term');el.textContent="";var i=0;clearInterval(_ti);
+_ti=setInterval(function(){if(i>=LOG_LINES.length){clearInterval(_ti);return;}
+var line=LOG_LINES[i++];var hl=(line.indexOf("78498")>=0||line.indexOf("True")>=0||line.indexOf("Failures: 0")>=0||line.indexOf("24.60")>=0);
+el.innerHTML+=(hl?'<span class="hl">'+line+'</span>':line)+"\n";el.scrollTop=el.scrollHeight;},160);}
+/* ---------- charts ---------- */
+function axes(c,labels){var x=c.getContext("2d");var W=c.width=c.offsetWidth*2,H=c.height=460;x.scale(1,1);
+x.fillStyle="#080c1a";x.fillRect(0,0,W,H);x.strokeStyle="#263154";x.fillStyle="#9aa6c7";x.font="20px sans-serif";
+for(var g=0;g<=4;g++){var y=40+g*90;x.beginPath();x.moveTo(70,y);x.lineTo(W-20,y);x.stroke();}
+return x;}
+function barChart(id,vals,colors,yl){var c=document.getElementById(id);var x=axes(c);var W=c.width,H=c.height;
+var max=Math.max.apply(null,vals)*1.15,n=vals.length,bw=(W-120)/n;
+x.fillStyle="#9aa6c7";x.font="20px sans-serif";x.fillText(yl,8,30);
+for(var i=0;i<n;i++){var h=(H-100)*vals[i]/max,bx=70+i*bw+8;
+x.fillStyle=colors[i]||"#6ea8fe";x.fillRect(bx,H-60-h,bw-16,h);
+x.fillStyle="#e8ecf8";var s=String(vals[i]);x.fillText(s.length>7?s.slice(0,7):s,bx,H-60-h-8);}
+c.style.height="230px";}
+barChart("chPrime",[78498,78628],["#7ee0b8","#6ea8fe"],"count");
+(function(){var c=document.getElementById("chPi");
+barChart("chPi",[3.42,3.24,2.04,2.10,2.06,2.11],["#ffd479","#ffd479","#7ee0b8","#7ee0b8","#7ee0b8","#7ee0b8"],"mu");})();
+/* ---------- Moser spindle diagram ---------- */
+(function(){var s3=Math.sqrt(3),th=2*Math.asin(1/(2*s3)),C=Math.cos(th),S=Math.sin(th);
+function R(p){return [p[0]*C-p[1]*S,p[0]*S+p[1]*C];}
+var V=[[0,0],[1,0],[.5,s3/2],[1.5,s3/2],R([1,0]),R([.5,s3/2]),R([1.5,s3/2])];
+var E=[[0,1],[0,2],[1,2],[1,3],[2,3],[0,4],[0,5],[4,5],[4,6],[5,6],[3,6]];
+var svg=document.getElementById("moser"),xs=V.map(function(p){return p[0];}),ys=V.map(function(p){return p[1];});
+var x0=Math.min.apply(null,xs),x1=Math.max.apply(null,xs),y0=Math.min.apply(null,ys),y1=Math.max.apply(null,ys);
+function X(v){return 25+(v-x0)/(x1-x0)*280;} function Y(v){return 225-(v-y0)/(y1-y0)*200;}
+var h="";E.forEach(function(e){h+='<line x1="'+X(V[e[0]][0])+'" y1="'+Y(V[e[0]][1])+'" x2="'+X(V[e[1]][0])+'" y2="'+Y(V[e[1]][1])+'" stroke="#6ea8fe" stroke-width="2"/>';});
+V.forEach(function(p,i){h+='<circle cx="'+X(p[0])+'" cy="'+Y(p[1])+'" r="9" fill="#161e3a" stroke="#7ee0b8" stroke-width="2"/><text x="'+X(p[0])+'" y="'+(Y(p[1])+5)+'" fill="#e8ecf8" font-size="11" text-anchor="middle">'+i+"</text>";});
+svg.innerHTML=h;})();
+/* ---------- quiz ---------- */
+var QUIZ=[
+{q:"How many primes are there below one million (recomputed by our sieve)?",o:["78,498","78,628","77,428","80,028"],a:0,e:"The sieve counts exactly 78,498. The smooth curve predicts ~78,628 — off by ~130."},
+{q:"The Riemann hypothesis says all nontrivial zeros sit on which line?",o:["Re = 7/8","Re = 1/2","Re = 11/12","Re = 1"],a:1,e:"Re = 1/2 is the famous open claim. Re > 7/8 is the weaker new claim (quasi-RH)."},
+{q:"What does family 003 claim?",o:["A proof of the full Riemann hypothesis","No zeta/Dirichlet-L zeros with Re > 7/8","That π equals 22/7","That P = NP"],a:1,e:"A fixed zero-free strip — historic, but far from the center line."},
+{q:"Why does the Moser spindle prove the plane needs ≥ 4 colors?",o:["It has 4 points","None of its 3⁷ = 2,187 3-colorings work","It is a hexagon","It uses 7 colors"],a:1,e:"Exhaustion: every 3-coloring violates a unit edge. Verified in experiment 02."},
+{q:"The score of 355/113 as an approximation of π is about…",o:["2.0","7.6","3.2","42"],a:2,e:"≈3.24 — a 'lucky' early fraction. Later ones fall back toward 2."},
+{q:"Which axioms may a Comparator-checked proof use?",o:["Any axioms at all","propext, Classical.choice, Quot.sound","ZFC + large cardinals","None — proofs must be axiom-free"],a:1,e:"Exactly the three standard Lean axioms. More, or any sorry, fails."},
+{q:"The Hodge-for-CM-varieties claim (family 032) is…",o:["L1 machine-checked","L2 expert review","L3 paper-only — do not cite as verified","Refuted"],a:2,e:"No Lean formalization at release; months of refereeing needed."},
+{q:"'372 out of 4,000' is…",o:["A 9.3% success rate","A kept-and-filtered count, failures undisclosed","A proof of 372 theorems","The number of Lean files"],a:1,e:"Grouped and filtered by significance — read it as '372 kept'."}];
+var ANS=JSON.parse(localStorage.getItem("mh_quiz")||"{}");
+function renderQuiz(){var box=document.getElementById("quizBox");box.innerHTML="";var done=0;
+QUIZ.forEach(function(item,i){var d=document.createElement("div");d.className="q";
+var h="<p>"+(i+1)+". "+item.q+"</p>";item.o.forEach(function(opt,j){
+var chk=(ANS[i]===j)?" checked":"";h+='<label><input type="radio" name="q'+i+'" value="'+j+'"'+chk+"> "+opt+"</label>";});
+h+='<div class="fb" id="fb'+i+'"></div>';d.innerHTML=h;box.appendChild(d);
+if(ANS[i]!==undefined){mark(i,false);done++;}
+var radios=d.querySelectorAll("input");radios.forEach(function(r){r.onchange=function(){ANS[i]=parseInt(r.value,10);
+try{localStorage.setItem("mh_quiz",JSON.stringify(ANS));}catch(e){} mark(i,true);score();};});});
+document.getElementById("pbar").style.width=(100*Object.keys(ANS).length/QUIZ.length)+"%";score();}
+function mark(i,live){var fb=document.getElementById("fb"+i);if(ANS[i]===QUIZ[i].a){fb.innerHTML='<span class="ok">✔ Correct. </span>'+QUIZ[i].e;}
+else{fb.innerHTML='<span class="no">✘ Not quite. </span>'+QUIZ[i].e;}
+document.getElementById("pbar").style.width=(100*Object.keys(ANS).length/QUIZ.length)+"%";}
+function score(){var s=0;for(var k in ANS){if(ANS[k]===QUIZ[k].a)s++;}
+var el=document.getElementById("score");
+el.textContent=Object.keys(ANS).length?("Your score: "+s+" / "+QUIZ.length+(s===QUIZ.length?" — pro status confirmed. 🎓":"")):"";}
+function resetQuiz(){ANS={};try{localStorage.removeItem("mh_quiz");}catch(e){} renderQuiz();}
+renderQuiz();
+</script>
+</body>
+</html>

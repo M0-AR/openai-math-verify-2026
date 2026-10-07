@@ -21,9 +21,11 @@
 > correct checking lane. **One command reproduces everything.**
 > Nothing here is peer review; everything here is runnable evidence.
 
-**🌐 Interactive web version of this README: open `preview.html`**
-(charts, a live-drawn Moser spindle, an animated run-through, and a quiz —
-host it free with GitHub Pages, see [§12](#12-read-it-as-a-website-github-pages)).
+**🌐 Interactive web version — live:
+[https://m0-ar.github.io/openai-math-verify-2026/](https://m0-ar.github.io/openai-math-verify-2026/)**
+(charts, a live-drawn Moser spindle, an animated run-through, and a quiz.
+Works offline too: open `preview.html` locally. Hosting notes in
+[§12](#12-read-it-as-a-website-github-pages)).
 
 ![Project overview](docs/screenshots/hero.png)
 
@@ -248,22 +250,48 @@ full scope-exclusion table, weekly longitudinal reruns, signed Challenge read).
 
 ## 12. Read it as a website (GitHub Pages)
 
+Live entry point (works under either source setting below):
+
+- 🏠 <https://m0-ar.github.io/openai-math-verify-2026/> — lands on the
+  interactive page via redirect
+- 📄 <https://m0-ar.github.io/openai-math-verify-2026/preview.html> — direct
+  link, source `/` (root)
+- 📄 <https://m0-ar.github.io/openai-math-verify-2026/docs/preview.html> —
+  direct link, source `/docs` (identical mirror copy)
+
+Setup (once):
+
 1. Push this repo to GitHub.
 2. Open **Settings → Pages**.
 3. Under **Build and deployment → Source** choose **Deploy from a branch**.
-4. Branch: `main`, folder: `/ (root)` — this serves `preview.html`. Save.
-5. Open `https://<you>.github.io/<repo>/preview.html` — the interactive page,
-   live. Put that link at the top of this README.
+4. Branch: `main`, folder: **`/ (root)`** (recommended) or `/docs` — both
+   resolve, because the repo ships mirrors: `preview.html` at root *and* in
+   `docs/`, plus `index.html` redirects in both places and `.nojekyll` to
+   keep serving static and deterministic. Save.
+5. Wait 1–2 min, confirm the Actions "pages build and deployment" run is
+   green, then open the links above.
 
-Alternative: move `preview.html` to `docs/index.html` and choose folder
-`/docs` — then the site root URL serves it directly.
+Why two copies? URL paths mirror the repo path *under the chosen source*:
+source `/` serves repo `docs/x` at `/docs/x`, while source `/docs` serves it
+at `/x`. The mirrors make the setting non-fatal if ignored. Diagnose with:
+
+```bash
+BASE="https://m0-ar.github.io/openai-math-verify-2026"
+for p in "" "preview.html" "docs/preview.html"; do
+  printf "%s -> " "/$p"
+  curl -s -o /dev/null -w "%{http_code}\n" "$BASE/$p"
+done
+# expect 200 / 200 / 200 (docs-link 404s only if the mirror was not pushed yet)
+```
 
 ## 13. Project structure
 
 ```text
 openai-math-verify-2026/
 ├── README.md                  # this file
-├── preview.html               # interactive web page (quiz, charts, demo replay)
+├── preview.html               # interactive page (canonical; quiz, charts, demo)
+├── index.html                 # redirect / → preview.html (Pages entry)
+├── .nojekyll                  # keep Pages static/deterministic
 ├── llms.txt                   # machine-readable project summary
 ├── docker-compose.yml         # one-command reproduction
 ├── Dockerfile  Makefile  requirements.txt
@@ -276,7 +304,8 @@ openai-math-verify-2026/
 ├── benchmarks/
 │   ├── benchmark_runner.py    # runs all five, writes receipts
 │   └── results/               # summary.json + summary.md
-├── docs/                      # METHODS, FINDINGS, HIDDEN_PATTERNS, DEMO
+├── docs/                      # METHODS, FINDINGS, HIDDEN_PATTERNS, DEMO,
+│                           preview.html mirror + index.html + screenshots
 ├── data/                      # regenerated at runtime (nothing vendored)
 └── papers/                    # publishable paper scaffold
 ```
