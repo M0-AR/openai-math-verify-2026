@@ -1,0 +1,3 @@
+Apache License 2.0 — this independent verification repo (code + docs).
+Upstream mathematics (openai/math) is separately Apache-2.0 by OpenAI; nothing
+upstream is vendored here. See README.md for attribution.

@@ -1,0 +1,16 @@
+services:
+  verify:
+    build: .
+    volumes:
+      - ./benchmarks/results:/work/benchmarks/results
+      - ./data:/work/data
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python3 benchmarks/benchmark_runner.py --out benchmarks/results/summary.json
+
+  docs:
+    build: .
+    volumes:
+      - .:/work
+    command: python3 -c "print('docs service ready — see README.md')"
+    profiles: ["docs"]

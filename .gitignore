@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+benchmarks/results/*.json
+!benchmarks/results/.gitkeep
+data/*.csv
+.lake/
